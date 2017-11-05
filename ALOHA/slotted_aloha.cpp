@@ -50,14 +50,6 @@ void read_stdin(){
 	sort(myPackets.begin(), myPackets.end(), compare);
 }
 
-string printPacket(Packet pkt){
-    
-    char buffer [150];
-    sprintf(buffer, "%d %d %d %d %d", pkt.id, pkt.src, pkt.dest, pkt.pkt_size, pkt.r_time);
-    string str = buffer;
-    return str;
-}
-
 void slotted_aloha(){
 	int num_successful = 0;
 	int num_unsuccessful = 0;
@@ -71,25 +63,23 @@ void slotted_aloha(){
 	while(incoming){
 		bool inWindow = true;
 		while(inWindow){
-			if(itr->r_time <= window_start){
-				slot_queue.push_back(*itr);
-				itr++;
-				if(itr == myPackets.end()){
+			if(itr->r_time < window_start){
+				slot_queue.push_back(*itr); //Push to queue
+				itr++; //Move one
+				if(itr == myPackets.end()){//Check end
 					incoming = false;
 					inWindow = false;
 				}
-			}
-			else{
-				inWindow = false;
+			}else{
+				inWindow = false; //Not in window
 			}
 		}
 
-		if(slot_queue.size() == 0){
+		if(slot_queue.size() == 0){ //Empty Slot!"
 			//cout << "Empty Slot!" << endl;
 			//num_unsuccessful++;
-		}
-		else if(slot_queue.size() == 1){
-//			cout << "Success!" << endl;
+		}else if(slot_queue.size() == 1){
+
 			cout << "Time: " << slot_queue.front().r_time;
 			cout << "Time: " << window_start
 				<< ", Packet " << slot_queue.front().id
@@ -98,6 +88,7 @@ void slotted_aloha(){
 				<< " " << slot_queue.front().pkt_size
 				<< " " << slot_queue.front().r_time
 				<< " start sending" << endl;
+
 			cout << "Time: " << window_start + window_size - 1
 				<< ", Packet " << slot_queue.front().id
 				<< ": " << slot_queue.front().src
@@ -106,22 +97,34 @@ void slotted_aloha(){
 				<< " " << slot_queue.front().r_time
 				<< " finish sending: successfully transmitted" << endl;
 			num_successful++;
-		}
-//    int id, src, dest, pkt_size, r_time;
-		else{
-//			cout << "No Success!" << endl;	
-			num_unsuccessful += slot_queue.size();
-		}
+		}else if(slot_queue.size() >= 2){
 
+			for(auto itrQueue = slot_queue.begin();;itrQueue++){
+
+				cout << "Time: " << window_start + window_size - 1
+			     << ", Packet " << itrQueue->id
+			     << ": " << itrQueue->src
+			     << " " << itrQueue->dest
+			     << " " << itrQueue->pkt_size
+			     << " " << itrQueue->r_time
+				 << " finish sending: failed" << endl;
+				 if(itrQueue == slot_queue.end())
+				 	break;
+
+			}
+			num_unsuccessful += slot_queue.size();
+			// slot_queue.clear();
+		}
 		slot_queue.clear();
 		window_start += window_size;
 	}
 
 	cout << endl << num_successful <<" packets successfully transmitted."  << endl; 
-	cout <<  num_unsuccessful << " packets had colissions." <<endl;	
-	cout <<  "The throughput is: " 
-	<< (((double)num_successful * (double)window_size * 1000.0) / ((double)window_start)) 
-	<<" kbps"<< endl;
+	    cout <<  num_unsuccessful << " packets had colissions." <<endl; 
+	    cout <<  "The throughput is: " 
+	    << (((double)num_successful * (double)window_size * 1000.0) / ((double)window_start)) 
+	    <<" kbps"<< endl;
+	
 }
 
 int main(void){
