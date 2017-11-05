@@ -50,6 +50,14 @@ void read_stdin(){
 	sort(myPackets.begin(), myPackets.end(), compare);
 }
 
+string printPacket(Packet pkt){
+    
+    char buffer [150];
+    sprintf(buffer, "%d %d %d %d %d", pkt.id, pkt.src, pkt.dest, pkt.pkt_size, pkt.r_time);
+    string str = buffer;
+    return str;
+}
+
 void slotted_aloha(){
 	int num_successful = 0;
 	int num_unsuccessful = 0;
