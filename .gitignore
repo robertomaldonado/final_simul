@@ -11,7 +11,10 @@ CSMA/*.txt
 ALOHA/traffic_file
 ALOHA/aloha
 ALOHA/slotted_aloha
+ALOHA/traffic_generator
 
+CSMA/persist
 CSMA/traffic_file
+CSMA/traffic_generator
 
 Multiplot/
