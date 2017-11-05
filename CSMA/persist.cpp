@@ -50,19 +50,20 @@ int main(){
     readData(data);
 
     int sent = 0;
+    int colls = 0;    
     for(int tmp_time = 1, i=0; tmp_time < data.size()-2 ; tmp_time++, i++){
 
         if( tmp_time < data[i].r_time && is_free ){ //Channel free and timming is good
 
             if(queued_data.size() > 1){ //Send the packetS on queue
                 for(int j=0; j< queued_data.size(); j++){ //Collision is guaranteed
-                    // cout << "Collision for ids: " << queued_data[i].id << endl ;                    
+                    // cout << "Collision for ids: " << queued_data[i].id << endl ; 
+                    colls++;                   
                 }
                 queued_data.clear(); //Clear the queue
             }else{ //Sent if there exists only one packet on queue
                 is_free=0; //Channel being used
-                sent++; //Sent that frame
-                // is_free=1;
+                sent++; //Sent that framE
             }
             // cout << "Sending from station" << data[i].id << endl;
             is_free=0; //Channel being used
@@ -82,11 +83,10 @@ int main(){
         
     }
 
-    double tpt = ((double)sent * data[data.size()-1].pkt_size) / (double)(data[data.size()-1].r_time + data[data.size()-1].pkt_size);
-
-    // double tpt = (sent * data[data.size()-1].pkt_size) / (double) ( pkts_v[pkts_v.size()-1].r_time + pkts_v[pkts_v.size()-1].pkt_size );
-    cout << "%%" << tpt*1000 << endl;
-    cout << sent <<endl;
+    double tpt = ((double)(data.size()-colls) * data[data.size()-1].pkt_size) / (double)(data[data.size()-1].r_time + data[data.size()-1].pkt_size);
+    cout << endl << data.size()-colls <<" packets successfully transmitted."  << endl; 
+	cout << colls << " packets had colissions." << endl;	
+	cout <<  "The throughput is: " << tpt*1000 << " kbps." << endl;
 
     return 0;
 }
