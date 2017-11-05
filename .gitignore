@@ -5,4 +5,13 @@ CSMA/*.o
 ALOHA/*.sh
 CSMA/*.sh
 
-Multiplot/*/*.sh
+ALOHA/*.txt
+CSMA/*.txt
+
+ALOHA/traffic_file
+ALOHA/aloha
+ALOHA/slotted_aloha
+
+CSMA/traffic_file
+
+Multiplot/

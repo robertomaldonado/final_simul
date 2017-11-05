@@ -7,7 +7,7 @@ CC=g++ -std=c++11
 CFLAGS = -c -Wall
 
 #Declare processes
-all: traffic aloha slotted_aloha
+all: traffic aloha slotted_aloha csma
 
 traffic: ALOHA/traffic_generator.o CSMA/traffic_generator.o
 	$(CC) ALOHA/traffic_generator.cpp -o ALOHA/traffic_generator
@@ -24,4 +24,5 @@ csma: CSMA/persist.o
 
 clean: 
 	rm -rf ALOHA/*.o ALOHA/traffic_generator CSMA/traffic_generator CSMA/*.o
-	rm -rf ALOHA/aloha ALOHA/slotted CSMA/persist
+	rm -rf ALOHA/aloha ALOHA/slotted_aloha CSMA/persist
+	rm -rf ALOHA/*.txt CSMA/*.txt
