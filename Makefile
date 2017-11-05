@@ -16,7 +16,7 @@ traffic: ALOHA/traffic_generator.o CSMA/traffic_generator.o
 aloha: ALOHA/aloha.o
 	$(CC) ALOHA/aloha.cpp -o ALOHA/aloha
 
-slotted_aloha: ALOHA/slotted_aloha.o
+slotted_aloha: 
 	$(CC) ALOHA/slotted_aloha.cpp -o ALOHA/slotted_aloha
 
 csma: CSMA/persist.o
