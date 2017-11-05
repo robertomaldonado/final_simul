@@ -25,4 +25,4 @@ csma: CSMA/persist.o
 clean: 
 	rm -rf ALOHA/*.o ALOHA/traffic_generator CSMA/traffic_generator CSMA/*.o
 	rm -rf ALOHA/aloha ALOHA/slotted_aloha CSMA/persist
-	rm -rf ALOHA/*.txt CSMA/*.txt
+	rm -rf ALOHA/*.txt CSMA/*.txt ALOHA/*.dat CSMA/*.dat 
