@@ -1,0 +1,8 @@
+.vscode/
+ALOHA/*.o 
+CSMA/*.o
+
+ALOHA/*.sh
+CSMA/*.sh
+
+Multiplot/*/*.sh
