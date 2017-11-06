@@ -3,8 +3,7 @@
 # Created on November 30, 2017
 
 # Declare variables
-CC=g++ -std=c++11
-CFLAGS = -c -Wall
+CC=g++ -std=c++11 -O2
 
 #Declare processes
 all: traffic aloha slotted_aloha csma
@@ -16,7 +15,7 @@ traffic: ALOHA/traffic_generator.o CSMA/traffic_generator.o
 aloha: ALOHA/aloha.o
 	$(CC) ALOHA/aloha.cpp -o ALOHA/aloha
 
-slotted_aloha: 
+slotted_aloha: ALOHA/slotted_aloha.o
 	$(CC) ALOHA/slotted_aloha.cpp -o ALOHA/slotted_aloha
 
 csma: CSMA/persist.o
