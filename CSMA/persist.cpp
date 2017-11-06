@@ -1,34 +1,34 @@
 #include <iostream>
+#include <stdio.h>
 #include <vector>
 
 using namespace std;
 
 class Packet{
 public: 
-	unsigned long id, src, dest, pkt_size, r_time, p_time;
+    unsigned long long id, src, dest, pkt_size, r_time;
 public: 
-	Packet(){
-		this->id = 0;
-		this->src = 0;
-		this->dest = 0;
-		this->pkt_size = 0;
-		this->r_time= 0;
-	}
-	Packet(long id, long src, long dest, long pkt_size,long ready_time){
-		this->id = id;
-		this->src = src;
-		this->dest = dest;
-		this->pkt_size = pkt_size;
-		this->r_time = ready_time;
-		this->p_time = ready_time;
-	}
+    Packet(){
+        this->id = 0;
+        this->src = 0;
+        this->dest = 0;
+        this->pkt_size = 0;
+        this->r_time= 0;
+    }
+    Packet(unsigned long long id, unsigned long long src, unsigned long long dest, unsigned long long pkt_size,unsigned long long ready_time){
+        this->id = id;
+        this->src = src;
+        this->dest = dest;
+        this->pkt_size = pkt_size;
+        this->r_time= ready_time;
+    }
 };
 
 void readData(vector<Packet>& my_pkts){
     int num_packets = 0;
 	cin >> num_packets;
 
-	unsigned long tempID, tempSrc, tempDest, tempPktSz, tempRTime;
+	unsigned long long tempID, tempSrc, tempDest, tempPktSz, tempRTime;
 	for(int i = 0; i < num_packets; i++){
 		cin >> tempID;
  		cin >> tempSrc;
@@ -44,7 +44,7 @@ void readData(vector<Packet>& my_pkts){
 string printPacket(Packet pkt){
     
     char buffer [150];
-    sprintf(buffer, "%lu %lu %lu %lu %lu", pkt.id, pkt.src, pkt.dest, pkt.pkt_size, pkt.r_time);
+    sprintf(buffer, "%llu %llu %llu %llu %llu", pkt.id, pkt.src, pkt.dest, pkt.pkt_size, pkt.r_time);
     string str = buffer;
     return str;
 };
