@@ -7,7 +7,7 @@ using namespace std;
 
 class Packet{
 public: 
-    unsigned long id, src, dest, pkt_size, r_time;
+    unsigned long long id, src, dest, pkt_size, r_time;
 public: 
     Packet(){
         this->id = 0;
@@ -16,7 +16,7 @@ public:
         this->pkt_size = 0;
         this->r_time= 0;
     }
-    Packet(int id, int src, int dest, int pkt_size,int ready_time){
+    Packet(unsigned long long id, int src, int dest, int pkt_size,unsigned long long ready_time){
         this->id = id;
         this->src = src;
         this->dest = dest;
