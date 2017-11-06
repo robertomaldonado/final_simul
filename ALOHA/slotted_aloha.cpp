@@ -38,9 +38,11 @@ public:
         }
 };
 
+int num_packets;
+
 //Function to read in from stdin the values of the traffic file
 void read_stdin(){
-	int num_packets = 0;
+	num_packets = 0;
 	cin >> num_packets;
 
 	unsigned long long tempID, tempSrc, tempDest, tempPktSz, tempRTime;
@@ -75,18 +77,18 @@ void slotted_aloha(){
         //such that the top element is the packet ready to transmit first for that node
         map<int,priority_queue<Packet,vector<Packet>,Compare> > node_wq;
 
-	for(auto itr = myPackets.begin(); itr != myPackets.end(); itr++)
+	for(vector<Packet>::iterator itr = myPackets.begin(); itr != myPackets.end(); itr++)
         	node_wq[itr->src].push(*itr);
 
         unsigned long long wnum = 0;
-        for(auto itr = node_wq.begin(); itr != node_wq.end(); itr++){
+        for(map<int,priority_queue<Packet,vector<Packet>,Compare> >::iterator itr = node_wq.begin(); itr != node_wq.end(); itr++){
                 wnum += itr->second.size();
 	}
 
 	while(wnum > 0){
                 //count the number of packets ready to send at the current open time window
                 int rnum = 0;
-                for(auto itr = node_wq.begin(); itr != node_wq.end(); itr++)
+                for(map<int,priority_queue<Packet,vector<Packet>,Compare> >::iterator itr = node_wq.begin(); itr != node_wq.end(); itr++)
 			if(!itr->second.empty())
                         	if(itr->second.top().r_time < window_opening)
                                 	rnum++;
@@ -100,9 +102,23 @@ void slotted_aloha(){
                 //And will wait for an open window
                 else if(rnum == 1){
                         //Find the node that is ready to send, send (pop) the packet
-                        for(auto itr = node_wq.begin(); itr != node_wq.end(); itr++){
+                        for(map<int,priority_queue<Packet,vector<Packet>,Compare> >::iterator itr = node_wq.begin(); itr != node_wq.end(); itr++){
 				if(!itr->second.empty())
 	                                if(itr->second.top().r_time < window_opening){
+						cout << "Time: " << window_opening
+						<< ", Packet " << itr->second.top().id
+						<< ": " << itr->second.top().src
+						<< " " << itr->second.top().dest
+						<< " " << itr->second.top().pkt_size
+						<< " " << itr->second.top().r_time
+						<< " start sending" << endl;
+						cout << "Time: " << window_opening + window_size - 1
+						<< ", Packet " << itr->second.top().id
+						<< ": " << itr->second.top().src
+						<< " " << itr->second.top().dest
+						<< " " << itr->second.top().pkt_size
+						<< " " << itr->second.top().r_time
+						<< " finish sending: successfully transmitted" << endl;
 	                                        itr->second.pop();
 	                                        break;
         	                        }
@@ -117,13 +133,43 @@ void slotted_aloha(){
                 }
                 //If multiple station are ready to transmit when the channel becomes idel
                 else{
-                        for(auto itr = node_wq.begin(); itr != node_wq.end(); itr++){
+                        for(map<int,priority_queue<Packet,vector<Packet>,Compare> >::iterator itr = node_wq.begin(); itr != node_wq.end(); itr++){
 				if(!itr->second.empty())
 	                                if(itr->second.top().r_time < window_opening){
 	                                        //////////////////////////////////////////////////////////////////////////
 	                                        //Commenting out this line of code within this block will make it such that 
 	                                        //if a packet transmission is interupted then a station will NOT attempt to 
 	                                        //retransmit it.
+						cout << "Time: " << window_opening
+						<< ", Packet " << itr->second.top().id
+						<< ": " << itr->second.top().src
+						<< " " << itr->second.top().dest
+						<< " " << itr->second.top().pkt_size
+						<< " " << itr->second.top().r_time
+						<< " start sending: collision" << endl;
+	                                        //itr->second.pop();
+	                                        //////////////////////////////////////////////////////////////////////////
+	
+	                                        //Give a random time to wait for the station to send the next packet
+	                                        //This section is strange because the behaviour of the protocol is highly dependent
+	                                        //on the maximum time that a station is allowed to wait
+	                                        //itr->second.top().r_time = current_time + (rand()%(2*pkt_size)) + pkt_size;
+	                                }
+                        }
+                        for(map<int,priority_queue<Packet,vector<Packet>,Compare> >::iterator itr = node_wq.begin(); itr != node_wq.end(); itr++){
+				if(!itr->second.empty())
+	                                if(itr->second.top().r_time < window_opening){
+	                                        //////////////////////////////////////////////////////////////////////////
+	                                        //Commenting out this line of code within this block will make it such that 
+	                                        //if a packet transmission is interupted then a station will NOT attempt to 
+	                                        //retransmit it.
+						cout << "Time: " << window_opening + window_size - 1
+						<< ", Packet " << itr->second.top().id
+						<< ": " << itr->second.top().src
+						<< " " << itr->second.top().dest
+						<< " " << itr->second.top().pkt_size
+						<< " " << itr->second.top().r_time
+						<< " finish sending: failed" << endl;
 	                                        itr->second.pop();
 	                                        //////////////////////////////////////////////////////////////////////////
 	
@@ -139,7 +185,7 @@ void slotted_aloha(){
 
                 //Count the number of packets which still need to be sent
                 wnum = 0;
-                for(auto itr = node_wq.begin(); itr != node_wq.end(); itr++){
+                for(map<int,priority_queue<Packet,vector<Packet>,Compare> >::iterator itr = node_wq.begin(); itr != node_wq.end(); itr++){
                         wnum += itr->second.size();
 		}
 
@@ -196,16 +242,16 @@ void slotted_aloha(){
 		window_start += window_size;
 	}
 */
-//	cout << num_successful << endl;
 //	cout << num_unsuccessful << endl;
 //	cout << myPackets.size() << endl;
-	cout << (int)(((double)num_successful * (double)window_size * 1000.0) / ((double)current_time)) << endl;
+	cout << num_successful << " packets succefully transmitted." << endl;
+	cout << num_packets - num_successful << " packets failed transmission due to collision." << endl;
+	cout << "throughput = " << (int)(((double)num_successful * (double)window_size * 1000.0) / ((double)current_time)) << "kbps" << endl;
 }
 
 int main(void){
 	read_stdin();
-	slotted_aloha();
-//	p_persistent(1);	
+	slotted_aloha();	
 
 	return 0;
 }
